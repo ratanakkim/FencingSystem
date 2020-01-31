@@ -106,7 +106,7 @@ public class Venue {
 		ArrayList<Team> ageGroup1 = new ArrayList<Team>();	
 		ArrayList<Team> ageGroup2 = new ArrayList<Team>();
 		ArrayList<Team> ageGroup3 = new ArrayList<Team>();
-		PriorityQueue<ArrayList<Team>> ageGroups = new PriorityQueue<ArrayList<Team>>(myComp); //EW EW EW EW I HATE MYSELF
+		ArrayList<ArrayList<Team>> ageGroups = new ArrayList<ArrayList<Team>>(); //EW EW EW EW I HATE MYSELF
 		try {
 			Booking currBooking = this.findThisWeekBooking();
 			//Get all teams into age groups
@@ -128,6 +128,7 @@ public class Venue {
 			Integer noPoule1 = ageGroup1.size()%3;
 			Integer noPoule2 = ageGroup2.size()%3;
 			Integer noPoule3 = ageGroup3.size()%3;
+			
 		}catch (NullPointerException e) {
 			System.out.println("The Booking might not be found");
 		}
