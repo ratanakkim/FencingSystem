@@ -1,4 +1,5 @@
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Comparator;
 import java.util.PriorityQueue;
 
@@ -107,6 +108,14 @@ public class Venue {
 		ArrayList<Team> ageGroup2 = new ArrayList<Team>();
 		ArrayList<Team> ageGroup3 = new ArrayList<Team>();
 		ArrayList<ArrayList<Team>> ageGroups = new ArrayList<ArrayList<Team>>(); //EW EW EW EW I HATE MYSELF
+		ArrayList<Bout> g1Bouts = new ArrayList<Bout>();
+		ArrayList<Bout> g2Bouts = new ArrayList<Bout>();
+		ArrayList<Bout> g3Bouts = new ArrayList<Bout>();
+		ArrayList<ArrayList<Bout>> allBouts = new ArrayList<ArrayList<Bout>>();
+		allBouts.add(g1Bouts);
+		allBouts.add(g2Bouts);
+		allBouts.add(g3Bouts);
+		
 		try {
 			Booking currBooking = this.findThisWeekBooking();
 			//Get all teams into age groups
@@ -123,12 +132,45 @@ public class Venue {
 				else  {
 					throw new Exception("PANIC AT THE HOW OLD ARE YOU");
 				}
+				
 			}
 			//Sort groups based on who's lacking teams i.e. sort by %3
 			Integer noPoule1 = ageGroup1.size()%3;
 			Integer noPoule2 = ageGroup2.size()%3;
 			Integer noPoule3 = ageGroup3.size()%3;
+			 
+			/*
+			 * For each age groups generate the possible bouts within the group
+			 * Go through the least and pair them off with the rest of the element AFTER them
+			 * The element before would have created a bout with them already
+			 * i.e. FORALL Team S and T s.t. T's index > S's index
+			 * create a bout for S -> T
+			 */
+			for ( ArrayList<Team> aG : ageGroups) {
+				for (Team t : aG) {
+					//Start is the next team after t
+					int curr = aG.indexOf(t) + 1;				
+					while (curr < aG.size()) {
+						Bout aBout = new Bout();
+						aBout.setTeam1(t);
+						aBout.setTeam2(aG.get(curr));
+						allBouts.get( ageGroups.indexOf(aG) ).add(aBout);
+						curr++;
+						
+					}
+				}
+			}
 			
+			for (ArrayList<Bout> gB : allBouts) {
+				Collections.shuffle(gB);
+			}
+			
+			/*
+			 * For each age group generate a poule by taking the 
+			 */
+			for (ArrayList<Team> aG : ageGroups) {
+				
+			}
 		}catch (NullPointerException e) {
 			System.out.println("The Booking might not be found");
 		}
