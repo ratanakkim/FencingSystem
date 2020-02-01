@@ -3,6 +3,13 @@ public class Team {
 	private int weapon = 0;
 	private int ageGroup = 0;
 	private int currentPoint=0;
+	private Boolean counted = false;
+	public Boolean getCounted() {
+		return counted;
+	}
+	public void setCounted(Boolean counted) {
+		this.counted = counted;
+	}
 	public int getWeapon() {
 		return weapon;
 	}
