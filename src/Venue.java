@@ -189,17 +189,28 @@ public class Venue {
 			}
 	
 			
+			
 			/*
 			 * Add all poules into their respective age group
+			 * 
 			 */
 			for (int a = 0; a < 3; a++) {
 				Poule aPoule = new Poule();
 				genPossBouts(ageGroups.get(a), allBouts.get(a));
 				aPoule.formBouts(ageGroups.get(a), allBouts.get(a));
+				
 				myPoules.add(aPoule);
 			}
 			
 			//TODO LEFT OVER TEAMS
+			/* Use a new list for leftovers to make life easier
+			 * Sort the left over teams by who has more left over
+			 * max would be 2 since it's a modulo 3
+			 * 
+			 */
+			int leftOver1 = ageGroup1.size();
+			int leftOver2 = ageGroup2.size();
+			int leftOver3 = ageGroup3.size();
 		}
 		finally{
 				
