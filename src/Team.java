@@ -1,5 +1,13 @@
 
 public class Team {
+	private int number;
+	public int getNumber() {
+		return number;
+	}
+	public void setNumber(int number) {
+		this.number = number;
+	}
+
 	private int weapon = 0;
 	private int ageGroup = 0;
 	private int currentPoint=0;
@@ -30,6 +38,6 @@ public class Team {
 	}
 	
 	public void showPoint() {
-		System.out.println("Current point is: " + currentPoint);
+		System.out.println("Current point is: " + currentPoint + " for team: "+ number);
 	}
 }
