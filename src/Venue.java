@@ -90,6 +90,10 @@ public class Venue {
 		}
 		
 	}
+	
+	/*
+	 * Comparator for comparing size of age group
+	 */
 	class NoPouleComparator implements Comparator<ArrayList<Team>> { 
 		@Override
 		public int compare(ArrayList<Team> t1, ArrayList<Team> t2) {
@@ -211,6 +215,55 @@ public class Venue {
 			int leftOver1 = ageGroup1.size();
 			int leftOver2 = ageGroup2.size();
 			int leftOver3 = ageGroup3.size();
+			
+			int totalLO = leftOver1 + leftOver2 + leftOver3;
+			NoPouleComparator npCmp = new NoPouleComparator();
+			
+			
+			while (totalLO >= 3){
+				Collections.sort(ageGroups, npCmp);
+				ArrayList<Team> loTeam = ageGroups.get(0);
+				
+				/*
+				 * If age group with the most left over has 2 team
+				 * we look for 1 more from the nearby team.
+				 */
+				if (loTeam.size() == 2 ) {
+					
+					int loAG = loTeam.get(0).getAgeGroup();
+					///Age group 1 or 3 has 2 teams, we can only grab 1 team from age group 2
+					if ( loAG == 1 || loAG == 3) {
+						if ( ageGroup2.size() > 0) {
+							Bout aBout = new Bout(loTeam.get(0), loTeam.get(1), ageGroup2.get(0));
+							loTeam.remove(0);
+							loTeam.remove(0);
+							ageGroup2.remove(0);
+							//Add the bout to the appropriate poule
+							myPoules.get((loAG -1)).addBouts(aBout);
+						}
+					}
+					// Age group 2 has 2 teams, we can grab from group 1 or 3
+					else {
+						ArrayList<Team> loTeam2 = ageGroups.get(1);
+						Bout aBout = new Bout(loTeam.get(0), loTeam.get(1),loTeam2.get(0));
+						loTeam.remove(0);
+						loTeam.remove(0);
+						loTeam2.remove(0);
+						myPoules.get((loAG -1)).addBouts(aBout);
+					}
+				}
+				// There are 1 team left over from each age group
+				else {
+					Bout aBout = new Bout (ageGroup1.get(0),ageGroup2.get(0),ageGroup3.get(0));
+					myPoules.get(1).addBouts(aBout);
+					ageGroup1.remove(0);
+					ageGroup2.remove(0);
+					ageGroup3.remove(0);
+				}
+				totalLO -=3;
+			}
+			
+			
 		}
 		finally{
 				
