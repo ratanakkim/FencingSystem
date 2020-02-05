@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class PouleGenerator {
+public class FencingSystem {
 	private ArrayList<Venue> myVenues = new ArrayList<Venue>();
 	
 	

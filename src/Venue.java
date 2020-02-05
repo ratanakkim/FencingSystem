@@ -16,9 +16,9 @@ public class Venue {
 	private ArrayList<Boolean> myAvail = new ArrayList<Boolean>(14);
 	private ArrayList<Poule> myPoules =  new ArrayList<Poule>();
 	private ArrayList<Booking> myBookings = new ArrayList<Booking>();
-	private static final int sabre = 0b001;
-	private static final int foil = 0b010;
-	private static final int epee = 0b100;
+	public static final int sabre = 0b001;
+	public static final int foil = 0b010;
+	public static final int epee = 0b100;
 	private int currentWeek;
 	private ArrayList<ArrayList<Team>> ageGroups = new ArrayList<ArrayList<Team>>(); 
 	public int getWeapons() {
@@ -150,7 +150,7 @@ public class Venue {
 	 * @throws Exception
 	 */
 	public void genPoule(ArrayList<ArrayList<Team>> ageGroups, int wpnMask) throws Exception {
-		//TODO Left over teams
+		
 
 		ArrayList<Team> ageGroup1 = new ArrayList<Team>();	
 		ArrayList<Team> ageGroup2 = new ArrayList<Team>();
@@ -206,7 +206,7 @@ public class Venue {
 				myPoules.add(aPoule);
 			}
 			
-			//TODO LEFT OVER TEAMS
+
 			/* Use a new list for leftovers to make life easier
 			 * Sort the left over teams by who has more left over
 			 * max would be 2 since it's a modulo 3

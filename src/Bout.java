@@ -12,6 +12,9 @@ public class Bout {
 		this.team2 = t2;
 		this.referee = ref;
 	}
+	public Bout() {
+		
+	}
 	public Team getTeam1() {
 		return team1;
 	}
