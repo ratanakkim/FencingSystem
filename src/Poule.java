@@ -58,21 +58,24 @@ public class Poule {
 			teams.add(team1);
 			teams.add(team2);
 			
-			/**
-			 * For each bouts created
-			 * get a random team to be referee
-			 * remove referee from the original team list
-			 */
-			for (int j =0 ; j < possPoule;j++) {
-				int rand = (int) (Math.random() * ageGroup.size());
-				Team aRef = ageGroup.get(rand);
-				aRef.setCounted(true);
-				myBouts.get(j).setReferee(aRef);
-				
-				teams.add(aRef);
-				ageGroup.remove(aRef);
-			}
+			
 		}
+		/**
+		 * For each bouts created
+		 * get a random team to be referee
+		 * remove referee from the original team list
+		 */
+		System.out.println("possPoule: " +possPoule);
+		for (int j =0 ; j < possPoule;j++) {
+			int rand = (int) (Math.random() * ageGroup.size());
+			Team aRef = ageGroup.get(rand);
+			aRef.setCounted(true);
+			myBouts.get(j).setReferee(aRef);
+			
+			teams.add(aRef);
+			ageGroup.remove(aRef);
+		}
+		System.out.println("Size of ageGroup in Poule: "+ageGroup.size());
 	}
 	
 	@Override

@@ -51,24 +51,14 @@ public class Venue {
 	public void setMyLocation(String myLocation) {
 		this.myLocation = myLocation;
 	}
-	public int getWeaponAvailability() {
-		return weapons;
-	}
-	public void setWeaponAvailability(int weaponAvailability) {
-		this.weapons = weaponAvailability;
-	}
+	
 	public ArrayList<Poule> getMyPoules() {
 		return myPoules;
 	}
 	public void setMyPoules(ArrayList<Poule> myPoules) {
 		this.myPoules = myPoules;
 	}
-	public ArrayList<Booking> getMyBooking() {
-		return myBookings;
-	}
-	public void setMyBooking(ArrayList<Booking> myBooking) {
-		this.myBookings = myBooking;
-	}
+	
 	public int getCurrentWeek() {
 		return currentWeek;
 	}
@@ -150,7 +140,7 @@ public class Venue {
 	 * @throws Exception
 	 */
 	public void genPoule(ArrayList<ArrayList<Team>> ageGroups, int wpnMask) throws Exception {
-		
+		//TODO funky stuff with the agegroups and agegroup1 and 2 and 3 
 
 		ArrayList<Team> ageGroup1 = new ArrayList<Team>();	
 		ArrayList<Team> ageGroup2 = new ArrayList<Team>();
@@ -198,11 +188,11 @@ public class Venue {
 			 * Add all poules into their respective age group
 			 * 
 			 */
-			for (int a = 0; a < 3; a++) {
+			for (int a = 0; a < 1; a++) {
 				Poule aPoule = new Poule();
 				genPossBouts(ageGroups.get(a), allBouts.get(a));
 				aPoule.formBouts(ageGroups.get(a), allBouts.get(a));
-				
+				System.out.println("Size of ageGroup in Venue: "+ ageGroups.get(a).size());
 				myPoules.add(aPoule);
 			}
 			
@@ -212,15 +202,16 @@ public class Venue {
 			 * max would be 2 since it's a modulo 3
 			 * 
 			 */
-			int leftOver1 = ageGroup1.size();
-			int leftOver2 = ageGroup2.size();
-			int leftOver3 = ageGroup3.size();
-			
+			int leftOver1 = ageGroups.get(0).size();
+			int leftOver2 =ageGroups.get(1).size();
+			int leftOver3 = ageGroups.get(2).size();
+			System.out.println("age group 1 lo: "+ leftOver1 );
 			int totalLO = leftOver1 + leftOver2 + leftOver3;
 			NoPouleComparator npCmp = new NoPouleComparator();
 			
 			
 			while (totalLO >= 3){
+				System.out.println("TotalLo: "+totalLO);
 				Collections.sort(ageGroups, npCmp);
 				ArrayList<Team> loTeam = ageGroups.get(0);
 				
@@ -228,6 +219,7 @@ public class Venue {
 				 * If age group with the most left over has 2 team
 				 * we look for 1 more from the nearby team.
 				 */
+				System.out.println("loTeam size: "+loTeam.size());
 				if (loTeam.size() == 2 ) {
 					
 					int loAG = loTeam.get(0).getAgeGroup();
@@ -251,6 +243,9 @@ public class Venue {
 						loTeam2.remove(0);
 						myPoules.get((loAG -1)).addBouts(aBout);
 					}
+				}
+				else if(loTeam.size() == 1){
+					
 				}
 				// There are 1 team left over from each age group
 				else {
@@ -281,7 +276,7 @@ public class Venue {
 	 * @param aG
 	 * @param aBs
 	 */
-	public void genPossBouts(ArrayList<Team> aG,LinkedList<Bout> aBs) {
+	private void genPossBouts(ArrayList<Team> aG,LinkedList<Bout> aBs) {
 		
 		for (Team t : aG) {
 			//Start is the next team after t

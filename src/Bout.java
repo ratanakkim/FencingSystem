@@ -54,6 +54,6 @@ public class Bout {
 	
 	@Override
 	public String toString(){
-		return("Team 1's score: "+ t1Score+" Team 2's score: "+t2Score+ "Winner is : "+winner );
+		return("Team "+ team1.getNumber()+"'s score: "+ t1Score+" Team "+team2.getNumber()+ "'s score: "+t2Score+" ref: "+referee+ "Winner is : "+winner );
 	}
 }

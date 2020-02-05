@@ -2,7 +2,7 @@ import java.util.ArrayList;
 
 public class Booking {
 	private int week;
-	private ArrayList<Team> teams;
+	private ArrayList<Team> teams = new ArrayList<Team>();
 	public int getWeek() {
 		return week;
 	}
@@ -21,5 +21,12 @@ public class Booking {
 	}
 	public void setTeam(ArrayList<Team> team) {
 		this.teams = team;
+	}
+	
+	@Override
+	public String toString() {
+		String ret = "Booking for week: "+week+" for " +teams.size() +" teams.";
+		return ret;
+		
 	}
 }
