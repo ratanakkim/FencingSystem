@@ -1,9 +1,36 @@
 import java.util.ArrayList;
 
-public class FencingSystem {
+import javafx.application.Application;
+import javafx.event.ActionEvent;
+import javafx.event.EventHandler;
+import javafx.scene.Scene;
+import javafx.scene.control.Button;
+import javafx.scene.layout.StackPane;
+import javafx.stage.Stage;
+public class FencingSystem extends  Application implements EventHandler<ActionEvent>{
+	
+	Button btn1;
 	private ArrayList<Venue> myVenues = new ArrayList<Venue>();
 	
-	public static void main(String[] args) {
+	public static void main (String[] args) {
+		launch(args);
+	}
+
+	@Override
+	public void start(Stage priStg) throws Exception {
+		 
+		priStg.setTitle("Fencing System");
+		btn1 = new Button();
+		btn1.setText("Make booking");
+		
+		StackPane layout = new StackPane();
+		layout.getChildren().add(btn1);
+		
+		Scene scn = new Scene(layout, 500, 500);
+		priStg.setScene(scn);
+		priStg.show();
+		btn1.setOnAction(this);
+		
 		Venue aVen = new Venue();
 		aVen.setWeapons(aVen.sabre);
 		
@@ -48,6 +75,14 @@ public class FencingSystem {
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
+		}
+		
+	}
+	
+	@Override
+	public void handle(ActionEvent event) {
+		if(event.getSource() == btn1) {
+			btn1.setText("Making Work");
 		}
 	}
 	
