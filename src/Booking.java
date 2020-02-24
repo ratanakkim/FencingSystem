@@ -12,6 +12,14 @@ public class Booking {
 	public ArrayList<Team> getTeam() {
 		return teams;
 	}
+	public String getTeamsString() {
+		String ret = "";
+		for (Team t : this.teams) {
+			ret +=t + ",";
+		}
+		
+		return ret;
+	}
 	public void removeTeam (Team aTeam) {
 		for (Team t : teams) {
 			if (t.equals(aTeam)) {
@@ -23,6 +31,9 @@ public class Booking {
 		this.teams = team;
 	}
 	
+	public void addTeam(Team ateam) {
+		this.teams.add(ateam);
+	}
 	@Override
 	public String toString() {
 		String ret = "Booking for week: "+week+" for " +teams.size() +" teams.";

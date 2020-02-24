@@ -4,6 +4,7 @@ import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.PriorityQueue;
+import java.util.Random;
 
 /**
  * @author kimph
@@ -64,6 +65,21 @@ public class Venue {
 	}
 	public void setCurrentWeek(int currentWeek) {
 		this.currentWeek = currentWeek;
+	}
+	@Override
+	public String toString(){
+		return myLocation +" | Weapons: "+weapons + " | booked: "+myBookings;
+		
+	}
+
+	public void genRndAvl() {
+		ArrayList<Boolean> arr = new ArrayList<Boolean>();
+		Random rnd = new Random();
+		for (int i = 0; i < 14; i++) {
+			arr.add(rnd.nextBoolean());
+		}
+		this.setMyAvail(arr);
+			
 	}
 	
 	public Boolean checkAvailability(int week) {
