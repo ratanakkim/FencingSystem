@@ -55,6 +55,8 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		//Layout for 1st page
 		VBox layout = new VBox();
 		//Layout for making a booking
+		
+		
 		VBox layout2 = new VBox();
 		layout2.setSpacing(10);
 		layout2.setPadding(new Insets(10, 10, 20, 10));
@@ -99,6 +101,12 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 //		     }
 //		  });
 				
+		VenueTable vensTbl = new VenueTable();
+		vensTbl.setItems(vensData);
+		Venue tstVen = new Venue();
+		tstVen.genRndAvl();
+		tstVen.setWeapons(3);
+		vensData.add(tstVen);
 //
 //		vensTbl.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
 //			
@@ -117,7 +125,7 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		Label lblVenues = new Label("Venues");
 		lblVenues.setFont(new Font ("Verdana",20));
 		//TODO FIX
-		//layout.getChildren().addAll(lblVenues,vensTbl,btn1);
+		layout.getChildren().addAll(lblVenues,vensTbl,btn1);
 		layout.setSpacing(20);
 		layout.setPadding(new Insets(10,10,20,10));
 		
