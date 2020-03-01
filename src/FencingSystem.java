@@ -5,6 +5,7 @@ import javax.swing.event.ChangeEvent;
 
 
 import javafx.application.Application;
+import javafx.beans.property.ReadOnlyObjectWrapper;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.beans.property.StringProperty;
 import javafx.beans.value.ChangeListener;
@@ -24,6 +25,7 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
 import javafx.scene.text.Font;
@@ -34,11 +36,13 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 	Button btn1;
 	Button btn2;
 	Scene index, makeBooking, seeBooking;
-	//private final ObservableList<Booking> bkgsData = FXCollections.observableArrayList();
+	private ObservableList<Booking> bkgsData = FXCollections.observableArrayList();
 	//private TableView bookingTbl = new TableView();
-	private final ObservableList<Venue> vensData = FXCollections.observableArrayList();
+	private ObservableList<Venue> vensData = FXCollections.observableArrayList();
 	private ArrayList<Venue> myVenues = new ArrayList<Venue>();
-	
+	private Stage myWindow;
+	private BookingTable bookingTbl;
+	private VenueTable vensTbl;
 	public static void main (String[] args) {
 		launch(args);
 	}
@@ -46,7 +50,8 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 	
 	@Override
 	public void start(Stage window) throws Exception {
-		window.setTitle("Fencing System");
+		myWindow = window;
+		myWindow.setTitle("Fencing System");
 		btn1 = new Button();
 		btn1.setText("Make booking");
 		btn2 = new Button();
@@ -61,7 +66,9 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		layout2.setSpacing(10);
 		layout2.setPadding(new Insets(10, 10, 20, 10));
 		
-		
+		HBox bkgsViewbtns = new HBox();
+		Button bookingToVenue = new Button("Back");
+		bkgsViewbtns.getChildren().addAll(newBooking,bookingToVenue);
 		Alert emptyvalues = new Alert(AlertType.WARNING);
 		emptyvalues.setTitle("ERROR");
 		emptyvalues.setContentText("field can't be empty");
@@ -101,13 +108,28 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 //		     }
 //		  });
 				
-		VenueTable vensTbl = new VenueTable();
+		vensTbl = new VenueTable();
+		vensTbl.setFencingSys(this);
 		vensTbl.setItems(vensData);
 		Venue tstVen = new Venue();
 		tstVen.genRndAvl();
 		tstVen.setWeapons(3);
 		vensData.add(tstVen);
-//
+		Venue tstVen2 = new Venue();
+		tstVen2.genRndAvl();
+		tstVen2.setWeapons(4);
+		vensData.add(tstVen2);
+		
+		int num = 1;
+		int wea = 3;
+		int ag = 2;
+		int wek= 3;
+		Team aTm = new Team(wea, ag, num);
+		Booking aBking = new Booking();
+		
+		aBking.setWeek(wek);
+		aBking.addTeam(aTm);
+		tstVen.getMyBookings().add(aBking);
 //		vensTbl.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
 //			
 //
@@ -132,8 +154,7 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		
 		Label lblBooking = new Label ("Bookings");
 		lblBooking.setFont(new Font("Verdana", 20));
-		//TODO fix this
-		//bookingTbl.setItems(bkgsData);
+
 //		bookingTbl.getColumns().addAll(tmNumCol,wpnCol,weekCol);
 		
 //		final TextField venTF = new TextField();
@@ -148,15 +169,18 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		ageTF.setPromptText("age");
 		weekTF.setPromptText("Week");
 		//TODO Fix bookingTbl nolonger exist since we move to new class
-		//layout2.getChildren().addAll(lblBooking,bookingTbl,teamTF,wpnTF, ageTF,weekTF,newBooking);
+		bookingTbl = new BookingTable();
+		//TODO fix this
+		bookingTbl.setItems(bkgsData);
+		layout2.getChildren().addAll(lblBooking,bookingTbl,teamTF,wpnTF, ageTF,weekTF,bkgsViewbtns );
 		index = new Scene(layout, 500, 500);
 		makeBooking = new Scene(layout2, 500,500);
 		
 		
 		
 		
-		window.setScene(index);
-		window.show();
+		myWindow.setScene(index);
+		myWindow.show();
 //		btn1.setOnAction(new EventHandler<ActionEvent>() {
 //
 //			@Override
@@ -166,7 +190,9 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 //			}
 //			
 //		});
-		
+		bookingToVenue.setOnAction(e -> {
+			this.switchToVenues();
+		});
 		btn1.setOnAction(e -> window.setScene(makeBooking));
 		newBooking.setOnAction(e -> {
 
@@ -186,7 +212,12 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 				aBooking.addTeam(aTeam);
 				System.out.println(aBooking);
 				//TODO fix since bkgsData moved to new class
-				//bkgsData.addAll(aBooking);
+				bkgsData.addAll(aBooking);
+				//TODO Switch booking for each venue
+				bookingTbl.setItems(bkgsData);
+				Venue currVen = vensTbl.getSelectionModel().getSelectedItem();
+				currVen.getMyBookings().add(aBooking);
+				
 				teamTF.clear();
 				wpnTF.clear();
 				ageTF.clear();
@@ -248,7 +279,21 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		
 	}
 	
-	
-	
+	public void setBkgsData(ArrayList<Booking> aList) {
+		ObservableList<Booking> obsBkgs = FXCollections.observableArrayList(aList);
+		this.bkgsData = obsBkgs;
+	}
+	public void switchToBookings(Venue aVen) {
+		//TODO pass data to the booking scene
+		//Display bkgsData after switching scene
+		this.bookingTbl.setBookings(aVen.getMyBookings());
+		this.bookingTbl.refresh();
+		myWindow.setScene(makeBooking);
+	}
+	public void switchToVenues() {
+		//TODO not transferring booking data properly
+		//this.bkgsData.remove(bkgsData.size()-1);
+		myWindow.setScene(index);
+	}
 	
 }
