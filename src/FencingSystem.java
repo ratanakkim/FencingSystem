@@ -36,7 +36,7 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 	Button btn1;
 	Button btn2;
 	Scene index, makeBooking, seeBooking;
-	private ObservableList<Booking> bkgsData = FXCollections.observableArrayList();
+	private ObservableList<Booking> bkgsData;
 	//private TableView bookingTbl = new TableView();
 	private ObservableList<Venue> vensData = FXCollections.observableArrayList();
 	private ArrayList<Venue> myVenues = new ArrayList<Venue>();
@@ -68,6 +68,7 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		
 		HBox bkgsViewbtns = new HBox();
 		Button bookingToVenue = new Button("Back");
+		bkgsViewbtns.setSpacing(10);
 		bkgsViewbtns.getChildren().addAll(newBooking,bookingToVenue);
 		Alert emptyvalues = new Alert(AlertType.WARNING);
 		emptyvalues.setTitle("ERROR");
@@ -171,7 +172,7 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		//TODO Fix bookingTbl nolonger exist since we move to new class
 		bookingTbl = new BookingTable();
 		//TODO fix this
-		bookingTbl.setItems(bkgsData);
+		
 		layout2.getChildren().addAll(lblBooking,bookingTbl,teamTF,wpnTF, ageTF,weekTF,bkgsViewbtns );
 		index = new Scene(layout, 500, 500);
 		makeBooking = new Scene(layout2, 500,500);
@@ -198,7 +199,7 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 
 			if (teamTF.getText().trim().isEmpty() || wpnTF.getText().trim().isEmpty()||
 				ageTF.getText().trim().isEmpty() || weekTF.getText().trim().isEmpty()) {
-				
+				bookingTbl.refresh();
 				emptyvalues.showAndWait();
 			}else {
 				// TODO check venue's availability
@@ -212,11 +213,16 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 				aBooking.addTeam(aTeam);
 				System.out.println(aBooking);
 				//TODO fix since bkgsData moved to new class
-				bkgsData.addAll(aBooking);
+				//bkgsData.addAll(aBooking);
+				bookingTbl.getBookings().add(aBooking);
 				//TODO Switch booking for each venue
+				//TODO table population and refresh only on setItems(bkgsData)
+				bkgsData = FXCollections.observableArrayList(bookingTbl.getBookings());
 				bookingTbl.setItems(bkgsData);
-				Venue currVen = vensTbl.getSelectionModel().getSelectedItem();
-				currVen.getMyBookings().add(aBooking);
+				
+				this.bookingTbl.refresh();
+				//Venue currVen = vensTbl.getSelectionModel().getSelectedItem();
+				// currVen.getMyBookings().add(aBooking);
 				
 				teamTF.clear();
 				wpnTF.clear();
@@ -287,12 +293,17 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		//TODO pass data to the booking scene
 		//Display bkgsData after switching scene
 		this.bookingTbl.setBookings(aVen.getMyBookings());
-		this.bookingTbl.refresh();
+		
+		bkgsData = FXCollections.observableArrayList(aVen.getMyBookings());
+		System.out.println("venue's booking is: " +bkgsData);
+		//TODO This transfers the data to the bookingTable but it's not great yet
+		bookingTbl.setItems(bkgsData);
 		myWindow.setScene(makeBooking);
 	}
 	public void switchToVenues() {
 		//TODO not transferring booking data properly
 		//this.bkgsData.remove(bkgsData.size()-1);
+		this.vensTbl.refresh();
 		myWindow.setScene(index);
 	}
 	
