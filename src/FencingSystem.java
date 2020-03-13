@@ -13,6 +13,7 @@ import javafx.beans.value.ObservableValue;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
+import javafx.event.Event;
 import javafx.event.EventHandler;
 import javafx.geometry.Insets;
 import javafx.scene.Scene;
@@ -25,24 +26,30 @@ import javafx.scene.control.TableColumn.CellDataFeatures;
 import javafx.scene.control.TableView;
 import javafx.scene.control.TextField;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.layout.Border;
+import javafx.scene.layout.BorderStroke;
+import javafx.scene.layout.BorderStrokeStyle;
+import javafx.scene.layout.BorderWidths;
+import javafx.scene.layout.CornerRadii;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
 import javafx.scene.text.Font;
 import javafx.stage.Stage;
 import javafx.util.Callback;
 public class FencingSystem extends  Application implements EventHandler<ActionEvent>{
 	
-	Button btn1;
-	Button btn2;
-	Scene index, makeBooking, seeBooking;
+	Button makeBkgBtn;
+	//Button btn2;
+	Scene index, makeBooking, seeBooking, addVenues;
 	private ObservableList<Booking> bkgsData;
 	//private TableView bookingTbl = new TableView();
 	private ObservableList<Venue> vensData = FXCollections.observableArrayList();
 	private ArrayList<Venue> myVenues = new ArrayList<Venue>();
 	private Stage myWindow;
-	private BookingTable bookingTbl;
-	private VenueTable vensTbl;
+	private BookingTable bookingTbl = new BookingTable();
+	private VenueTable vensTbl = new VenueTable();
 	public static void main (String[] args) {
 		launch(args);
 	}
@@ -52,66 +59,79 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 	public void start(Stage window) throws Exception {
 		myWindow = window;
 		myWindow.setTitle("Fencing System");
-		btn1 = new Button();
-		btn1.setText("Make booking");
-		btn2 = new Button();
-		Button newBooking = new Button("Add Booking");
-		//bookingTbl.setEditable(false);
-		//Layout for 1st page
-		VBox layout = new VBox();
-		//Layout for making a booking
 		
 		
-		VBox layout2 = new VBox();
-		layout2.setSpacing(10);
-		layout2.setPadding(new Insets(10, 10, 20, 10));
-		
+		VBox venPgVB = new VBox();
+		VBox bkgPgVB = new VBox();	
+		VBox addVensVB = new VBox();
+		HBox vensPgBtns = new HBox();
 		HBox bkgsViewbtns = new HBox();
+		
+		index = new Scene(venPgVB, 1000, 1000);
+		makeBooking = new Scene(bkgPgVB, 1000,1000);
+		addVenues = new Scene(addVensVB, 1000, 1000);
+		
+		makeBkgBtn = new Button();
+		makeBkgBtn.setText("Make booking");
+		Button newVenueBtn = new Button("Add Venues");
+		Button newBooking = new Button("Add Booking");
 		Button bookingToVenue = new Button("Back");
+		Button editBkgBtn = new Button ("Edit");
+		
+		Label lblVenues = new Label("Venues");
+		lblVenues.setFont(new Font ("Verdana",20));
+		Label lblBooking = new Label ("Bookings");
+		lblBooking.setFont(new Font("Verdana", 20));
+		
+		bkgPgVB.setSpacing(10);
+		bkgPgVB.setPadding(new Insets(10, 10, 20, 10));
+		
+
+		/*
+		 * Adding new venue section
+		 */
+		
+		Label lblAddVen = new Label("Add venue");
+		final TextField venLocTF = new TextField();
+		final TextField venWpnTF = new TextField();
+		
+		
+		final TextField teamTF = new TextField();
+		final TextField wpnTF = new TextField();
+		final TextField ageTF = new TextField();
+		final TextField weekTF = new TextField();
+		vensTbl = new VenueTable();
+		
+		/*
+		 * Index page setting
+		 */
+		vensTbl.setFencingSys(this);
+		vensTbl.setItems(vensData);
+		
+		addVensVB.getChildren().addAll(lblAddVen,venLocTF,venWpnTF,newVenueBtn);
+		addVensVB.setSpacing(10);
+		addVensVB.setPadding(new Insets(10,10,10,10));
+		
+		addVensVB.setBorder(new Border(new BorderStroke(Color.LIGHTGRAY, 
+	            BorderStrokeStyle.SOLID, CornerRadii.EMPTY, new BorderWidths(5) ) ));
+		vensPgBtns.setSpacing(10);
+		vensPgBtns.getChildren().addAll(makeBkgBtn);
+		venPgVB.getChildren().addAll(lblVenues,vensTbl,addVensVB,vensPgBtns);
+		venPgVB.setSpacing(20);
+		venPgVB.setPadding(new Insets(10,10,20,10));
 		bkgsViewbtns.setSpacing(10);
-		bkgsViewbtns.getChildren().addAll(newBooking,bookingToVenue);
+		bkgsViewbtns.getChildren().addAll(newBooking, editBkgBtn, bookingToVenue);
 		Alert emptyvalues = new Alert(AlertType.WARNING);
 		emptyvalues.setTitle("ERROR");
 		emptyvalues.setContentText("field can't be empty");
-
-		//TODO venue table needs to open bookings table on double click
-		//bookingTbl.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY);
 		
-		//TODO venue table cell factory
+		lblAddVen.setFont(new Font("Verdana",20));
+		/*
+		 * New Venue's page settings 
+		 */
+		venLocTF.setPromptText("Enter Name or Address");
+		venWpnTF.setPromptText("Enter weapons as number between 1-8");
 		
-		
-		
-		//Booking table columns
-//		TableColumn tmNumCol = new TableColumn("Team Number");
-//		TableColumn wpnCol = new TableColumn("Weapon");
-//		TableColumn weekCol = new TableColumn("Week");
-//		weekCol.setPrefWidth(520);
-		
-		
-//		tmNumCol.setCellValueFactory(new Callback<CellDataFeatures<Booking, String>,  ObservableValue<String>>() {
-//		     public ObservableValue<String> call(CellDataFeatures<Booking, String> b) {
-//		         StringProperty ret = new SimpleStringProperty( b.getValue().getTeamsString());
-//		         return ret;
-//		     }
-//		  });
-//		wpnCol.setCellValueFactory(new Callback<CellDataFeatures<Booking, String>,  ObservableValue<String>>() {
-//		     public ObservableValue<String> call(CellDataFeatures<Booking, String> b) {
-//		    	
-//		         StringProperty ret = new SimpleStringProperty( Integer.toString( b.getValue().getTeam().get(0).getWeapon()));
-//		         return ret;
-//		     }
-//		  });
-//		weekCol.setCellValueFactory(new Callback<CellDataFeatures<Booking, String>,  ObservableValue<String>>() {
-//		     public ObservableValue<String> call(CellDataFeatures<Booking, String> b) {
-//		    	
-//		         StringProperty ret = new SimpleStringProperty( Integer.toString( b.getValue().getWeek()));
-//		         return ret;
-//		     }
-//		  });
-				
-		vensTbl = new VenueTable();
-		vensTbl.setFencingSys(this);
-		vensTbl.setItems(vensData);
 		Venue tstVen = new Venue();
 		tstVen.genRndAvl();
 		tstVen.setWeapons(3);
@@ -131,38 +151,19 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		aBking.setWeek(wek);
 		aBking.addTeam(aTm);
 		tstVen.getMyBookings().add(aBking);
-//		vensTbl.getSelectionModel().selectedItemProperty().addListener(new ChangeListener() {
-//			
-//
-//			@Override
-//			public void changed(ObservableValue arg0, Object arg1, Object arg2) {
-//				if (vensTbl.getSelectionModel().getSelectedItem() != null) {
-//					Venue currVen = vensTbl.getSelectionModel().getSelectedItem();
-//					System.out.println(currVen);
-//				}
-//				
-//			}
-//			
-//		});
 
-		Label lblVenues = new Label("Venues");
-		lblVenues.setFont(new Font ("Verdana",20));
+		
 		//TODO FIX
-		layout.getChildren().addAll(lblVenues,vensTbl,btn1);
-		layout.setSpacing(20);
-		layout.setPadding(new Insets(10,10,20,10));
+		
+
 		
 		
-		Label lblBooking = new Label ("Bookings");
-		lblBooking.setFont(new Font("Verdana", 20));
+		
 
 //		bookingTbl.getColumns().addAll(tmNumCol,wpnCol,weekCol);
 		
 //		final TextField venTF = new TextField();
-		final TextField teamTF = new TextField();
-		final TextField wpnTF = new TextField();
-		final TextField ageTF = new TextField();
-		final TextField weekTF = new TextField();
+
 		//TODO Create Custom class for alerts and textfields 
 //		venTF.setPromptText("Venue Name");
 		teamTF.setPromptText("Team Number");
@@ -170,16 +171,14 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		ageTF.setPromptText("age");
 		weekTF.setPromptText("Week");
 		//TODO Fix bookingTbl nolonger exist since we move to new class
-		bookingTbl = new BookingTable();
+		
 		//TODO fix this
 		
-		layout2.getChildren().addAll(lblBooking,bookingTbl,teamTF,wpnTF, ageTF,weekTF,bkgsViewbtns );
-		index = new Scene(layout, 500, 500);
-		makeBooking = new Scene(layout2, 500,500);
+		bkgPgVB.getChildren().addAll(lblBooking,bookingTbl,teamTF,wpnTF, ageTF,weekTF,bkgsViewbtns );
 		
 		
 		
-		
+		//myWindow.setMaximized(true);
 		myWindow.setScene(index);
 		myWindow.show();
 //		btn1.setOnAction(new EventHandler<ActionEvent>() {
@@ -194,7 +193,8 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		bookingToVenue.setOnAction(e -> {
 			this.switchToVenues();
 		});
-		btn1.setOnAction(e -> window.setScene(makeBooking));
+		
+		makeBkgBtn.setOnAction(e -> window.setScene(makeBooking));
 		newBooking.setOnAction(e -> {
 
 			if (teamTF.getText().trim().isEmpty() || wpnTF.getText().trim().isEmpty()||
@@ -228,6 +228,30 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 				wpnTF.clear();
 				ageTF.clear();
 				weekTF.clear();
+			}
+		});
+		editBkgBtn.setOnAction(e ->{
+			if (this.bookingTbl.getSelectionModel().getSelectedItem() !=  null) {
+				//TODO finish booking editing 
+				System.out.println( "Editing booking");
+			
+			}
+			else {
+				//TODO print error message
+			}
+		});
+		newVenueBtn.setOnAction(e ->{
+			String locStr = venLocTF.getText().trim();
+			String wpnStr = venWpnTF.getText().trim();
+			if ( locStr.isEmpty() || wpnStr.isEmpty() ) {
+				//TODO finish this
+				System.out.println( "Can't make new Venue");
+			}
+			else {
+				Venue aVen = new Venue(locStr, Integer.parseInt(wpnStr) );
+				vensData.add(aVen);
+				//TODO availability
+				System.out.println("ARGHHG");
 			}
 		});
 		
@@ -298,7 +322,9 @@ public class FencingSystem extends  Application implements EventHandler<ActionEv
 		System.out.println("venue's booking is: " +bkgsData);
 		//TODO This transfers the data to the bookingTable but it's not great yet
 		bookingTbl.setItems(bkgsData);
+		
 		myWindow.setScene(makeBooking);
+		
 	}
 	public void switchToVenues() {
 		//TODO not transferring booking data properly

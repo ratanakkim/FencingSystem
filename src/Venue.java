@@ -22,6 +22,13 @@ public class Venue {
 	public static final int epee = 0b100;
 	private int currentWeek;
 	private ArrayList<ArrayList<Team>> ageGroups = new ArrayList<ArrayList<Team>>(); 
+	public Venue() {
+		
+	}
+	public Venue(String aLoc, int aWpn) {
+		myLocation = aLoc;
+		weapons = aWpn;
+	}
 	public int getWeapons() {
 		return weapons;
 	}
